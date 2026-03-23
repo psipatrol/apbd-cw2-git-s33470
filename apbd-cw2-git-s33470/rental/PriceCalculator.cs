@@ -4,8 +4,8 @@ namespace apbd_cw2_git_s33470.rental;
 
 public class PriceCalculator
 {
-    private const double DailyRate = 0.1;
-    private const double PenalityRate = 0.1;
+    private const double DailyRate = 0.01;
+    private const double PenalityRate = 0.03;
     
     public double CalculateBaseFee(AbstractEquipment equipment, int days)
     {

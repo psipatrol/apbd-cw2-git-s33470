@@ -11,7 +11,7 @@ public class Rental
     public AbstractUser User { get; init; }
     public DateTime StartDate {get; init;}
     public DateTime EndDate {get; private set;}
-    public DateTime ReturnDate {get; private set;}
+    public DateTime? ReturnDate {get; private set;}
     public double BaseFee {get; private set;}
     public double PenalityFee {get; private set;}
     public double TotalFee => BaseFee + PenalityFee;
