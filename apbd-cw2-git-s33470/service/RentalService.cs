@@ -53,4 +53,25 @@ public class RentalService
         Console.WriteLine($"{item.Name} is returned by {rental.User.FirstName} {rental.User.LastName}, total fee is {rental.TotalFee} with {penality} penality");
     }
     
+    public List<Rental> GetOverdueRentals(Status status)
+    {
+        return _rentals.Where(r => r.ReturnDate == null && DateTime.Now > r.EndDate).ToList();
+    }
+
+    public List<Rental> GetActiveUserRentals(AbstractUser user)
+    {
+        return _rentals.Where(r => r.User.Id == user.Id && r.ReturnDate == null).ToList();
+    }
+
+    public void GenerateReport()
+    {
+        Console.WriteLine($"Generating report for {DateTime.Now}");
+        Console.WriteLine($"All rented equipment amount {_rentals.Count}");
+        Console.WriteLine($"Active rentals {_rentals.Count(r => r.ReturnDate == null)}");
+        Console.WriteLine($"Total income {_rentals.FindAll(r => r.ReturnDate != null).Sum(r => r.TotalFee)}");
+        Console.WriteLine($"Including penalities {_rentals.FindAll(r => r.ReturnDate != null).Sum(r => r.PenalityFee)}");
+        Console.WriteLine($"Predicted income {_rentals.FindAll(r => r.ReturnDate == null).Sum(r => r.TotalFee)}");
+        Console.WriteLine($"Predicted penalities {_rentals.FindAll(r => r.ReturnDate == null).Sum(r => r.PenalityFee)}");
+    }
+    
 }
