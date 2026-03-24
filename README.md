@@ -3,3 +3,6 @@ Klasy sprzętu do wypożyczenia wyposażone zostały w buildery co ułatwia ich 
 Istnieją adekwatne klasy abstrakcyjne co jest kluczowe.
 Enumy opisujące typy użytkowników oraz sprzętu dla czytelności.
 Kalkulator cen w jako osobna klasa dla wyizolowanej odpowiedzialnośći oraz możliwości zmiany przelicznika ceny w jednym miejscu.
+
+Uruchonienie:
+Klasa Program.cs jest główną klasą, należy umiejscowić kursor na opcji "run" oraz kliknąć
