@@ -9,22 +9,24 @@ public class RentalService
     private List<Rental> _rentals = new();
     private PriceCalculator _priceCalculator;
 
-    public RentalService(PriceCalculator priceCalculator)
+    public RentalService()
     {
-        _priceCalculator = priceCalculator;
+        _priceCalculator = new PriceCalculator();
     }
 
     public void RentItem(AbstractUser user, AbstractEquipment item, int plannedDuration)
     {
         if (item.Status != Status.Available)
         {
-            throw new InvalidOperationException($"Equipment {item.Name} is currently not available (Status: {item.Status})");
+            Console.WriteLine($"!!!Equipment {item.Name} is currently not available (Status: {item.Status})");
+            return;
         }
         
         int currentRentals =  _rentals.Count(r => r.User.Id == user.Id && r.ReturnDate == null);
         if (currentRentals >= user.MaxEquipment)
         {
-            throw new InvalidOperationException($"User {user.FirstName} {user.LastName} is over his renting limit");
+            Console.WriteLine($"!!!User {user.FirstName} {user.LastName} is over his renting limit");
+            return;
         }
         
         double baseFee = _priceCalculator.CalculateBaseFee(item, plannedDuration);
@@ -43,7 +45,8 @@ public class RentalService
 
         if (rental == null)
         {
-            throw new InvalidOperationException($"Equipment {item.Name} is not currently marked as rented");
+            Console.WriteLine($"!!!Equipment {item.Name} is not currently marked as rented");
+            return;
         }
         
         double penality = _priceCalculator.CalculatePenality(rental, returnDate);
@@ -53,15 +56,26 @@ public class RentalService
         Console.WriteLine($"{item.Name} is returned by {rental.User.FirstName} {rental.User.LastName}, total fee is {rental.TotalFee} with {penality} penality");
     }
     
-    public List<Rental> GetOverdueRentals(Status status)
+    public void ShowOverdueRentals()
     {
-        return _rentals.Where(r => r.ReturnDate == null && DateTime.Now > r.EndDate).ToList();
+        _rentals.FindAll(r => r.ReturnDate == null && DateTime.Now > r.EndDate).ForEach(r => Console.WriteLine($"{r.Item}"));
     }
 
-    public List<Rental> GetActiveUserRentals(AbstractUser user)
+    public void ShowActiveUserRentals(AbstractUser user)
     {
-        return _rentals.Where(r => r.User.Id == user.Id && r.ReturnDate == null).ToList();
+        _rentals.FindAll(r => r.User.Id == user.Id && r.ReturnDate == null).ForEach(r => Console.WriteLine($"{r.Item}"));
     }
+    
+    public void ShowAllEquipment()
+    {
+        _rentals.ForEach(r => Console.WriteLine($"{r.Item}"));
+    }
+    
+    public void ShowAvailableEquipment()
+    {
+        _rentals.FindAll(r => r.Item.Status == Status.Available).ForEach(r => Console.WriteLine($"{r.Item}"));
+    }
+
 
     public void GenerateReport()
     {
